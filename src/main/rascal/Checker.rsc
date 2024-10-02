@@ -25,6 +25,11 @@ str prettyAType(classType()) = "Class";
 str prettyAType(functionType()) = "Function";
 str prettyAType(listType()) = "List";
 
+void collect(current: (VariableDeclaration) `var <Id name> = <Expr exp> ;`, Collector c){
+    c.define("<name>",variableId(), current, defType(exp));
+    collect(exp, c);
+}
+
 void collect(current: (Expr) `<Id idName>`, Collector c){
     c.use(idName, {variableId()});
 }
@@ -60,11 +65,11 @@ void collect(current: (Expr) `<Expr postDecrExp> --`, Collector c){     //this t
     c.fact(current, postDecrExp);
 }
 
-void collect(current: (Expr) ` ++ <Expr preIncrExp>`, Collector c){     //this too
+void collect(current: (Expr) `++ <Expr preIncrExp>`, Collector c){     //this too
     c.fact(current, preIncrExp);
 }
 
-void collect(current: (Expr) ` -- <Expr preDecrExp>`, Collector c){     //this too
+void collect(current: (Expr) `-- <Expr preDecrExp>`, Collector c){     //this too
     c.fact(current, preDecrExp);
 }
 

@@ -2,7 +2,9 @@ module Syntax
 
 extend CommonLex;
 
-start syntax Begin = declarations : Declarations+ decList;
+start syntax Begin 
+    = declarations : Declarations+ decList
+    ;
 
 syntax Declarations 
     = vardec : VariableDeclaration variableDeclaration

@@ -5,24 +5,14 @@ extend Checker;
 import Syntax;
 import ParseTree;
 
-TModel syntaxModelForTree(Tree pt){
-    return collectAndSolve(pt, modelName = "spl");
-}
 
-TModel syntaxTModelFromLoc(loc code){
-    pt = parse(#start[Begin], code);
+TModel syntaxModelForTree(Tree pt){
     return collectAndSolve(pt);
 }
 
 test bool splTests() {
-    return runTests([|project://siwesprojectlang/src/main/rascal/tests.spl|],
-                    #SPL,
+    return runTests([|project://siwesprojectlang/src/main/rascal/tests.ttl|],
+                    #start[Begin],
                     syntaxModelForTree,
                     runName = "Spl");
-}
-
-bool main() = splTests();
-
-TModel syntaxTModelFromTree(Tree pt){
-    return collectAndSolve(pt);
 }
