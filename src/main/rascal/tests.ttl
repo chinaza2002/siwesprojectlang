@@ -1,0 +1,40 @@
+var x = 7;
+var y;
+function getvalue (height){
+    var u;
+}
+class Car extends Goat { 
+    constructor(weight, height) {
+        var day = night;
+    }
+    var t;
+    function getvalue (){
+        do{
+            var yu = 8;
+        }
+        while(7)
+    return x;
+    }
+}
+
+for (var i = 0; ; i < 4 ; i++){
+    var tiy;
+}
+
+switch(this){
+    case dya: var thu = thursad;
+    case gya: var yuit;
+    default : var rgy;
+}
+
+try {
+
+}
+catch(heuy){
+
+}
+finally {
+    
+}
+
+var list1 = [];
