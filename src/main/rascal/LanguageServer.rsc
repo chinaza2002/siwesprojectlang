@@ -8,7 +8,7 @@ import Syntax;
 import Prelude;
 
 set[LanguageService] siwesProjectLangContribs() = {
-    parser(parser(#start[Program]))
+    parser(parser(#start[Begin]))
 };
 
 void setupIde() {
