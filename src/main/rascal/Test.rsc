@@ -4,7 +4,7 @@ import Syntax;
 import AST;
 import ParseTree;
 import IO;
-
+import LanguageServer;
 // Begin testBeginSyntax(loc file = |project://siwesprojectlang/src/main/rascal/tests.spl|){
 //     return parse(#Begin, file);
 // }

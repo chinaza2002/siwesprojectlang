@@ -14,9 +14,9 @@ set[LanguageService] siwesProjectLangContribs() = {
 void setupIde() {
     registerLanguage(
         language(
-            pathConfig(srcs = [|std:///|, |project://siwesprojectlang/src|]),
+            pathConfig(srcs = [|std:///|, |project://siwesprojectlang/src/main/rascal|]),
             "SPL Grammar",
-            "spl",
+            "ttl",
             "LanguageServer",
             "siwesProjectLangContribs"
         )
