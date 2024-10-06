@@ -25,6 +25,8 @@ str prettyAType(classType()) = "Class";
 str prettyAType(functionType()) = "Function";
 str prettyAType(listType()) = "List";
 
+// void collect(current: (Begin) ``)
+
 void collect(current: (VariableDeclaration) `var <Id name> = <Expr exp> ;`, Collector c){
     c.define("<name>",variableId(), current, defType(exp));
     collect(exp, c);
@@ -54,7 +56,7 @@ void collect(current: (Expr) `<String strVal>`, Collector c){
 
 void collect(current: (Expr) `( <Expr bracketExpr> )`, Collector c){
     c.fact(current, bracketExpr);
-    collect(e, c);
+    collect(bracketExpr, c);
 }
 
 void collect(current: (Expr) `<Expr postIncrExp> ++`, Collector c){     //not sure this is correct
@@ -152,8 +154,8 @@ void collect(current: (Expr) `<Expr lhs> - <Expr rhs>`, Collector c){
     collect(lhs, rhs, c);
 }
 
-void collect(current: (Expr) `<Expr lhs> \< <Expr lhs>`, Collector c){
-    collect(lhs, rhs, s);
+void collect(current: (Expr) `<Expr lhs> \< <Expr rhs>`, Collector c){
+    collect(lhs, rhs, c);
     c.calculate("Lt", current, [lhs, rhs], 
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
@@ -165,8 +167,8 @@ void collect(current: (Expr) `<Expr lhs> \< <Expr lhs>`, Collector c){
         });
 }
 
-void collect(current: (Expr) `<Expr lhs> \> <Expr lhs>`, Collector c){
-    collect(lhs, rhs, s);
+void collect(current: (Expr) `<Expr lhs> \> <Expr rhs>`, Collector c){
+    collect(lhs, rhs, c);
     c.calculate("Gt", current, [lhs, rhs], 
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
@@ -178,8 +180,8 @@ void collect(current: (Expr) `<Expr lhs> \> <Expr lhs>`, Collector c){
         });
 }
 
-void collect(current: (Expr) `<Expr lhs> \<= <Expr lhs>`, Collector c){
-    collect(lhs, rhs, s);
+void collect(current: (Expr) `<Expr lhs> \<= <Expr rhs>`, Collector c){
+    collect(lhs, rhs, c);
     c.calculate("Leq", current, [lhs, rhs], 
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
@@ -191,8 +193,8 @@ void collect(current: (Expr) `<Expr lhs> \<= <Expr lhs>`, Collector c){
         });
 }
 
-void collect(current: (Expr) `<Expr lhs> \>= <Expr lhs>`, Collector c){
-    collect(lhs, rhs, s);
+void collect(current: (Expr) `<Expr lhs> \>= <Expr rhs>`, Collector c){
+    collect(lhs, rhs, c);
     c.calculate("Geq", current, [lhs, rhs], 
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
@@ -204,8 +206,8 @@ void collect(current: (Expr) `<Expr lhs> \>= <Expr lhs>`, Collector c){
         });
 }
 
-void collect(current: (Expr) `<Expr lhs> == <Expr lhs>`, Collector c){
-    collect(lhs, rhs, s);
+void collect(current: (Expr) `<Expr lhs> == <Expr rhs>`, Collector c){
+    collect(lhs, rhs, c);
     c.calculate("Eq", current, [lhs, rhs], 
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
@@ -217,8 +219,8 @@ void collect(current: (Expr) `<Expr lhs> == <Expr lhs>`, Collector c){
         });
 }
 
-void collect(current: (Expr) `<Expr lhs> != <Expr lhs>`, Collector c){
-    collect(lhs, rhs, s);
+void collect(current: (Expr) `<Expr lhs> != <Expr rhs>`, Collector c){
+    collect(lhs, rhs, c);
     c.calculate("Neq", current, [lhs, rhs], 
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
@@ -230,8 +232,8 @@ void collect(current: (Expr) `<Expr lhs> != <Expr lhs>`, Collector c){
         });
 }
 
-void collect(current: (Expr) `<Expr lhs> = <Expr lhs>`, Collector c){
-    collect(lhs, rhs, s);
+void collect(current: (Expr) `<Expr lhs> = <Expr rhs>`, Collector c){
+    collect(lhs, rhs, c);
     c.calculate("assign", current, [lhs, rhs], 
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
@@ -243,8 +245,8 @@ void collect(current: (Expr) `<Expr lhs> = <Expr lhs>`, Collector c){
         });
 }
 
-void collect(current: (Expr) `<Expr lhs> *= <Expr lhs>`, Collector c){
-    collect(lhs, rhs, s);
+void collect(current: (Expr) `<Expr lhs> *= <Expr rhs>`, Collector c){
+    collect(lhs, rhs, c);
     c.calculate("assignmul", current, [lhs, rhs], 
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
@@ -255,8 +257,8 @@ void collect(current: (Expr) `<Expr lhs> *= <Expr lhs>`, Collector c){
         });
 }
 
-void collect(current: (Expr) `<Expr lhs> /= <Expr lhs>`, Collector c){
-    collect(lhs, rhs, s);
+void collect(current: (Expr) `<Expr lhs> /= <Expr rhs>`, Collector c){
+    collect(lhs, rhs, c);
     c.calculate("assigndiv", current, [lhs, rhs], 
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
@@ -267,8 +269,8 @@ void collect(current: (Expr) `<Expr lhs> /= <Expr lhs>`, Collector c){
         });
 }
 
-void collect(current: (Expr) `<Expr lhs> %= <Expr lhs>`, Collector c){
-    collect(lhs, rhs, s);
+void collect(current: (Expr) `<Expr lhs> %= <Expr rhs>`, Collector c){
+    collect(lhs, rhs, c);
     c.calculate("assignmodulo", current, [lhs, rhs], 
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
@@ -279,8 +281,8 @@ void collect(current: (Expr) `<Expr lhs> %= <Expr lhs>`, Collector c){
         });
 }
 
-void collect(current: (Expr) `<Expr lhs> += <Expr lhs>`, Collector c){
-    collect(lhs, rhs, s);
+void collect(current: (Expr) `<Expr lhs> += <Expr rhs>`, Collector c){
+    collect(lhs, rhs, c);
     c.calculate("assignadd", current, [lhs, rhs], 
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
@@ -291,8 +293,8 @@ void collect(current: (Expr) `<Expr lhs> += <Expr lhs>`, Collector c){
         });
 }
 
-void collect(current: (Expr) `<Expr lhs> -= <Expr lhs>`, Collector c){
-    collect(lhs, rhs, s);
+void collect(current: (Expr) `<Expr lhs> -= <Expr rhs>`, Collector c){
+    collect(lhs, rhs, c);
     c.calculate("assignsub", current, [lhs, rhs], 
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
