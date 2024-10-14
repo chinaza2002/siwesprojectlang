@@ -9,7 +9,7 @@ data AType
     | intType()
     | boolType()
     | strType()
-    | listType()
+    // | listType()
     ;
 
 data IdRole 
@@ -22,14 +22,25 @@ str prettyAType(boolType()) = "Bool";
 str prettyAType(intType()) = "Int";
 str prettyAType(strType()) = "Str";
 str prettyAType(classType()) = "Class";
-str prettyAType(functionType()) = "Function";
-str prettyAType(listType()) = "List";
+// str prettyAType(listType()) = "List";
 
 // void collect(current: (Begin) ``)
 
 void collect(current: (VariableDeclaration) `var <Id name> = <Expr exp> ;`, Collector c){
     c.define("<name>",variableId(), current, defType(exp));
     collect(exp, c);
+}
+
+// void collect(current: (VariableDeclaration) `var <Id name>;`, Collector c){
+//     // c.fact(current, )
+// }
+
+void collect(current: (FunctionDeclaration) `function <Id name> (<{Id ","}* params> ) { <Body body>}`, Collector c){
+    c.define("<name>", functionId(), current, defType(body));
+}
+
+void collect(current: (Body) `<Declarations* decList> <ReturnStatement? returnStatement>`, Collector c){
+    
 }
 
 void collect(current: (Expr) `<Id idName>`, Collector c){
@@ -60,19 +71,23 @@ void collect(current: (Expr) `( <Expr bracketExpr> )`, Collector c){
 }
 
 void collect(current: (Expr) `<Expr postIncrExp> ++`, Collector c){     //not sure this is correct
-    c.fact(current, postIncrExp);
+    c.fact(current, defType(postIncrExp));
+    collect(postIncrExp, c);
 }
 
 void collect(current: (Expr) `<Expr postDecrExp> --`, Collector c){     //this too
-    c.fact(current, postDecrExp);
+    c.fact(current, defType(postDecrExp));
+    collect(postDecrExp, c);
 }
 
 void collect(current: (Expr) `++ <Expr preIncrExp>`, Collector c){     //this too
-    c.fact(current, preIncrExp);
+    c.fact(current, defType(preIncrExp));
+    collect(preIncrExp, c);
 }
 
 void collect(current: (Expr) `-- <Expr preDecrExp>`, Collector c){     //this too
-    c.fact(current, preDecrExp);
+    c.fact(current, defType(preDecrExp));
+    collect(preDecrExp, c);
 }
 
 void collect(current: (Expr) `<Expr lhs> * <Expr rhs>`, Collector c){
@@ -80,8 +95,6 @@ void collect(current: (Expr) `<Expr lhs> * <Expr rhs>`, Collector c){
     AType (Solver s){
         switch(<s.getType(lhs), s.getType(rhs)>){
             case <intType(), intType()>: return intType();
-            case <boolType(), boolType()>: return boolType();
-            case <strType(), strType()>: return strType();
             default: {
                 s.report(error(current, "`*` not defined for %t and %t", lhs, rhs));
                 return intType();
@@ -95,8 +108,6 @@ void collect(current: (Expr) `<Expr lhs> / <Expr rhs>`, Collector c){
         AType (Solver s){
             switch(<s.getType(lhs), s.getType(rhs)>){
                 case <intType(), intType()>: return intType();
-                case <boolType(), boolType()>: return boolType();
-                case <strType(), strType()>: return strType();
                 default: {
                     s.report(error(current, "`/` not defined for %t and %t", lhs, rhs));
                     return intType();
@@ -111,8 +122,6 @@ void collect(current: (Expr) `<Expr lhs> % <Expr rhs>`, Collector c){
         AType (Solver s){
             switch(<s.getType(lhs), s.getType(rhs)>){
                 case <intType(), intType()>: return intType();
-                case <boolType(), boolType()>: return boolType();
-                case <strType(), strType()>: return strType();
                 default: {
                     s.report(error(current, "`%` not defined for %t and %t", lhs, rhs));
                     return intType();
@@ -127,8 +136,6 @@ void collect(current: (Expr) `<Expr lhs> + <Expr rhs>`, Collector c){
         AType (Solver s){
             switch(<s.getType(lhs), s.getType(rhs)>){
                 case <intType(), intType()>: return intType();
-                case <boolType(), boolType()>: return boolType();
-                case <strType(), strType()>: return strType();
                 default: {
                     s.report(error(current, "`+` not defined for %t and %t", lhs, rhs));
                     return intType();
@@ -143,8 +150,6 @@ void collect(current: (Expr) `<Expr lhs> - <Expr rhs>`, Collector c){
         AType (Solver s){
             switch(<s.getType(lhs), s.getType(rhs)>){
                 case <intType(), intType()>: return intType();
-                case <boolType(), boolType()>: return boolType();
-                case <strType(), strType()>: return strType();
                 default: {
                     s.report(error(current, "`-` not defined for %t and %t", lhs, rhs));
                     return intType();
@@ -160,7 +165,6 @@ void collect(current: (Expr) `<Expr lhs> \< <Expr rhs>`, Collector c){
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
                 case [intType(), intType()] : return boolType();
-                case [strType(), strType()] : return boolType();
                 default : s.report(error(current, "%q requires two comparable types but found %t and %t", "\<", lhs, rhs));
             }
             return strType();
@@ -173,7 +177,6 @@ void collect(current: (Expr) `<Expr lhs> \> <Expr rhs>`, Collector c){
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
                 case [intType(), intType()] : return boolType();
-                case [strType(), strType()] : return boolType();
                 default : s.report(error(current, "%q requires two comparable types but found %t and %t", "\>", lhs, rhs));
             }
             return strType();
@@ -186,7 +189,6 @@ void collect(current: (Expr) `<Expr lhs> \<= <Expr rhs>`, Collector c){
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
                 case [intType(), intType()] : return boolType();
-                case [strType(), strType()] : return boolType();
                 default : s.report(error(current, "%q requires two comparable types but found %t and %t", "\<=", lhs, rhs));
             }
             return strType();
@@ -199,7 +201,6 @@ void collect(current: (Expr) `<Expr lhs> \>= <Expr rhs>`, Collector c){
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
                 case [intType(), intType()] : return boolType();
-                case [strType(), strType()] : return boolType();
                 default : s.report(error(current, "%q requires two comparable types but found %t and %t", "\>=", lhs, rhs));
             }
             return strType();
@@ -237,8 +238,9 @@ void collect(current: (Expr) `<Expr lhs> = <Expr rhs>`, Collector c){
     c.calculate("assign", current, [lhs, rhs], 
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
-                case [intType(), intType()] : return boolType();
-                case [strType(), strType()] : return boolType();
+                case [strType(), intType()] : return intType();
+                case [strType(), strType()] : return strType();
+                case [strType(), boolType()] : return boolType();
                 default : s.report(error(current, "%q requires two comparable types but found %t and %t", "=", lhs, rhs));
             }
             return strType();
@@ -250,7 +252,7 @@ void collect(current: (Expr) `<Expr lhs> *= <Expr rhs>`, Collector c){
     c.calculate("assignmul", current, [lhs, rhs], 
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
-                case [intType(), intType()] : return intType();
+                case [strType(), intType()] : return intType();
                 default : s.report(error(current, "%q requires two equal types but found %t and %t", "*=", lhs, rhs));
             }
             return intType();
@@ -262,7 +264,7 @@ void collect(current: (Expr) `<Expr lhs> /= <Expr rhs>`, Collector c){
     c.calculate("assigndiv", current, [lhs, rhs], 
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
-                case [intType(), intType()] : return intType();
+                case [strType(), intType()] : return intType();
                 default : s.report(error(current, "%q requires two equal types but found %t and %t", "/=", lhs, rhs));
             }
             return intType();
@@ -274,7 +276,7 @@ void collect(current: (Expr) `<Expr lhs> %= <Expr rhs>`, Collector c){
     c.calculate("assignmodulo", current, [lhs, rhs], 
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
-                case [intType(), intType()] : return intType();
+                case [strType(), intType()] : return intType();
                 default : s.report(error(current, "%q requires two equal types but found %t and %t", "%=", lhs, rhs));
             }
             return intType();
@@ -286,7 +288,7 @@ void collect(current: (Expr) `<Expr lhs> += <Expr rhs>`, Collector c){
     c.calculate("assignadd", current, [lhs, rhs], 
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
-                case [intType(), intType()] : return intType();
+                case [strType(), intType()] : return intType();
                 default : s.report(error(current, "%q requires two equal types but found %t and %t", "+=", lhs, rhs));
             }
             return intType();
@@ -298,7 +300,7 @@ void collect(current: (Expr) `<Expr lhs> -= <Expr rhs>`, Collector c){
     c.calculate("assignsub", current, [lhs, rhs], 
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
-                case [intType(), intType()] : return intType();
+                case [strType(), intType()] : return intType();
                 default : s.report(error(current, "%q requires two equal types but found %t and %t", "-=", lhs, rhs));
             }
             return intType();

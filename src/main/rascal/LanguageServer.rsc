@@ -1,11 +1,13 @@
 module LanguageServer
 
+extend TestChecker;
 import ParseTree;
 import util::Reflective;
 import util::LanguageServer;
 import Syntax;
 
 import Prelude;
+
 
 set[LanguageService] siwesProjectLangContribs() = {
     parser(parser(#start[Begin]))
@@ -18,7 +20,7 @@ void setupIde() {
             "SPL Grammar",
             "ttl",
             "LanguageServer",
-            "siwesProjectLangContribs"
+            "syntaxModelForTree"
         )
     );
 }

@@ -1,1 +1,8 @@
-test Ok1 [[ var x = 7; ]]
+test OK1 [[ var x = 1; ]]
+
+test OK2 [[ function day () { var ty = 1; } ]]
+
+test Undef1 [[ var x = y; ]] 
+expect { "Undefined variable `y`" }
+
+test Add1 [[ var ty = 1 + 3; ]]

@@ -68,7 +68,7 @@ syntax Expr
     | intexp : Integer intVal
     | boolexp : Boolean boolVal
     | strexp : String strVal
-    | listexp : "[" {Expr ","}* arrayExp "]"
+    // | listexp : "[" {Expr ","}* arrayExp "]"
     | bracket bracketexp : "(" Expr bracketExpr")"
     > postincrement : Expr postIncrExp "++"
     | postdecrement : Expr postDecrExp "--"

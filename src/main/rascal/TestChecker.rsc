@@ -11,7 +11,7 @@ TModel syntaxModelForTree(Tree pt){
 }
 
 test bool splTests() {
-    return runTests([|project://siwesprojectlang/src/main/rascal/tests.spl|],
+    return runTests([|project://siwesprojectlang/src/main/rascal/tests.ttl|],
                     #start[Begin],
                     syntaxModelForTree,
                     runName = "Spl");
