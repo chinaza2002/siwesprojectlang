@@ -20,7 +20,7 @@ syntax VariableDeclaration
 
 
 syntax FunctionDeclaration 
-    = functiondefinition : "function" Id name "(" {Id ","}* params ")" "{" Body body "}"
+    = functiondefinition : "function" Id name "(" {Expr ","}* params ")" "{" Body body "}"
     ;
 
 syntax Body 

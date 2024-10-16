@@ -3,12 +3,14 @@ module Checker
 extend analysis::typepal::TypePal;
 import Syntax;
 
+
 data AType 
     = classType()
     | functionType()
     | intType()
     | boolType()
     | strType()
+    | voidType()
     // | listType()
     ;
 
@@ -24,23 +26,60 @@ str prettyAType(strType()) = "Str";
 str prettyAType(classType()) = "Class";
 // str prettyAType(listType()) = "List";
 
-// void collect(current: (Begin) ``)
+
 
 void collect(current: (VariableDeclaration) `var <Id name> = <Expr exp> ;`, Collector c){
     c.define("<name>",variableId(), current, defType(exp));
     collect(exp, c);
 }
 
-// void collect(current: (VariableDeclaration) `var <Id name>;`, Collector c){
-//     // c.fact(current, )
-// }
+void collect(current: (ConstructorDeclr) `constructor ( <{Id ","}* constructorParam> ) { <Body body> }`, Collector c){
+    for (identifier <- constructorParam){
+        collect(identifier,c);
+    }
+    c.enterScope(current);{
+        collect(body,c);
+    }
+    c.leaveScope(current);
+}
 
-void collect(current: (FunctionDeclaration) `function <Id name> (<{Id ","}* params> ) { <Body body>}`, Collector c){
-    c.define("<name>", functionId(), current, defType(body));
+void collect(current: (ClassDeclaration) `class <Id className> <ExtendPart? optionalExtend> { <ConstructorDeclr? constructorDecl> <Body body> }`, Collector c){
+    c.define("<className>",classId(),current,defType(classType()));
+    for (ext <- optionalExtend){
+        collect(ext, c);
+    }
+    c.enterScope(current);{
+        for (contrct <- constructorDecl){
+            collect(contrct, c);
+        }
+        collect(body, c);
+    }
+    c.leaveScope(current);
+}
+
+void collect(current: (ReturnStatement) `return <Expr exp> ;`, Collector c){
+    c.fact(current, exp);
+    collect(exp, c);
+}
+
+void collect(current: (FunctionDeclaration) `function <Id name> (<{Expr ","}* params> ) { <Body body>}`, Collector c){
+    for (ret <- body.returnStatement){
+        c.define("<name>", functionId(), current, defType(ret));
+    }
+    for (parameter <- params){
+        collect(parameter,c);
+    }
+    c.enterScope(current);{
+        collect(body, c);
+    }
+    c.leaveScope(current);
 }
 
 void collect(current: (Body) `<Declarations* decList> <ReturnStatement? returnStatement>`, Collector c){
-    
+    collect(decList,c);
+    for (ret <- returnStatement){
+        collect(ret,c);
+    }
 }
 
 void collect(current: (Expr) `<Id idName>`, Collector c){
