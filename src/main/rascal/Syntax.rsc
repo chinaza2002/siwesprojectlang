@@ -9,62 +9,108 @@ start syntax Begin
 syntax Declarations 
     = vardec : VariableDeclaration variableDeclaration
     | classdec : ClassDeclaration classDeclaration
-    | funcdec : FunctionDeclaration functionDeclaration
-    | statdec : Statements statmentDeclaration
+    // | funcdec : FunctionDeclaration functionDeclaration
+    // | statdec : Statements statmentDeclaration
     ;
 
 syntax VariableDeclaration 
     = initialization : "var" Id name "=" Expr exp ";"
-    | noninitialization : "var" Id name ";"
-    ;
-
-
-syntax FunctionDeclaration 
-    = functiondefinition : "function" Id name "(" {Id ","}* params ")" "{" Body body "}"
-    ;
-
-syntax Body 
-    = bodydefinitions : Declarations* declList ReturnStatement? returnStatement
-    ;
-
-syntax ReturnStatement 
-    = returndefinition : "return" Expr exp ";"
+    // | noninitialization : "var" Id name ";"
     ;
 
 syntax ClassDeclaration 
-    = classdefinition : "class" Id className ExtendPart? optionalExtend "{" ConstructorDeclr? constructorDecl Body body "}"
+    = "class" ClassId cid "extends" ClassId ecid "{" 
+            FieldDecl* fielddecls
+            ConstructorDeclr constructorDecl
+            MethodDecl* methoddecls
+     "}"
     ;
 
-syntax ExtendPart 
-    = extenddefinition : "extends" Id name
+syntax FieldDecl
+    = ClassId cid Id id ";"
     ;
 
-syntax ConstructorDeclr 
-    = constructordefinition : "constructor" "(" {Id ","}* constructorParam  ")" "{" Body body "}"
+syntax ConstructorDeclr
+    =  ClassId cid Parameters params "{"
+            SuperCall supercall
+            FieldAssignment* fieldAssignments
+       "}"
     ;
 
-syntax Statements 
-    = forloop : "for" "(" VariableDeclaration variableDeclaration ";" Expr condition ";" Expr exp")" "{" Body body "}"
-    | forinloop :"for" "(" VariableDeclaration variableDeclaration "in" Expr exp ")" "{" Body body "}"
-    | whileloop : "while" "(" Expr cond ")" "{" Body body "}"
-    | dowhileloop : "do" "{" Body "}" "while" "(" Expr cond")"
-    | ifstatement : "if" "(" Expr cond ")" "{" Body body "}" 
-    | ifelsestatement : "if" "(" Expr cond ")" "{" Body ifBody "}" "else" "{" Body elseBody "}"
-    | switchstatement : "switch" "(" Expr cond ")" "{" CasePart* casePart "default" ":" Body defaultBody "}"
-    | trycatch : "try" "{" Body tryBody "}" "catch" "(" Id catchException ")" "{" Body catchBody"}"
-    | tryfinally : "try" "{" Body tryBody "}" "finally" "{" Body finallyBody "}"
-    | trycatchfinally : "try" "{" Body tryBody "}" "catch" "(" Id  catchException ")" "{" Body catchBody "}" "finally" "{" Body finallyBody"}"
-    | breakstatement : "break" ";"
-    | continuestatement : "continue" ";"
+syntax SuperCall
+    = "super" super "(" {Variable ","}* vars ")" ";"
     ;
 
-syntax CasePart 
-    = casestatement : "case" Expr caseExp ":" Body caseBody
+syntax Parameter 
+    = ClassId cid Id id
     ;
+
+syntax Parameters 
+    = "(" {Parameter ","}* params ")"
+    ;
+
+syntax MethodDecl
+    = ClassId cid Id mid Parameters params "{" "return" Expr exp ";" "}"
+    ;
+
+syntax Field
+    = Id id
+    ;
+
+// syntax FunctionDeclaration 
+//     = functiondefinition : "function" Id name "(" {Id ","}* params ")" "{" Body body "}"
+//     ;
+
+// syntax Body 
+//     = bodydefinitions : Declarations* declList ReturnStatement? returnStatement
+//     ;
+
+// syntax ReturnStatement 
+//     = returndefinition : "return" Expr exp ";"
+//     ;
+
+// syntax ClassDeclaration 
+//     = classdefinition : "class" Id className ExtendPart? optionalExtend "{" ConstructorDeclr? constructorDecl Body body "}"
+//     ;
+
+// syntax ExtendPart 
+//     = extenddefinition : "extends" Id name
+//     ;
+
+// syntax ConstructorDeclr 
+//     = constructordefinition : "constructor" "(" {Id ","}* constructorParam  ")" "{" Body body "}"
+//     ;
+
+
+
+// syntax Statements 
+//     = forloop : "for" "(" VariableDeclaration variableDeclaration ";" Expr condition ";" Expr exp")" "{" Body body "}"
+//     | forinloop :"for" "(" VariableDeclaration variableDeclaration "in" Expr exp ")" "{" Body body "}"
+//     | whileloop : "while" "(" Expr cond ")" "{" Body body "}"
+//     | dowhileloop : "do" "{" Body "}" "while" "(" Expr cond")"
+//     | ifstatement : "if" "(" Expr cond ")" "{" Body body "}" 
+//     | ifelsestatement : "if" "(" Expr cond ")" "{" Body ifBody "}" "else" "{" Body elseBody "}"
+//     | switchstatement : "switch" "(" Expr cond ")" "{" CasePart* casePart "default" ":" Body defaultBody "}"
+//     | trycatch : "try" "{" Body tryBody "}" "catch" "(" Id catchException ")" "{" Body catchBody"}"
+//     | tryfinally : "try" "{" Body tryBody "}" "finally" "{" Body finallyBody "}"
+//     | trycatchfinally : "try" "{" Body tryBody "}" "catch" "(" Id  catchException ")" "{" Body catchBody "}" "finally" "{" Body finallyBody"}"
+//     | breakstatement : "break" ";"
+//     | continuestatement : "continue" ";"
+//     ;
+
+// syntax CasePart 
+//     = casestatement : "case" Expr caseExp ":" Body caseBody
+//     ;
 
 
 syntax Expr
     = idExp : Id idName
+    // | Variable var
+    | Expr exp "." Field field
+    | Expr exp "." Method method Expr exps
+    | "new" Constructor constructor Expr exps
+    | "(" Class class ")" Expr exp
+    | "this"
     | intexp : Integer intVal
     | boolexp : Boolean boolVal
     | strexp : String strVal
@@ -91,4 +137,27 @@ syntax Expr
     > right assignmodulo : Expr lhs "%=" Expr rhs 
     > right assignadd : Expr lhs "+=" Expr rhs 
     > right assignsub : Expr lhs "-=" Expr rhs
+    ;
+
+syntax FieldAssignment
+    = "this" "." Field field "=" Expr exp ";"
+    ;   
+
+syntax Constructor
+    = ClassId id
+    ;
+syntax Class
+    = ClassId id
+    ;
+    
+syntax Variable
+    = Id id
+    ;
+ 
+syntax Field
+    = Id id
+    ;
+
+syntax Method
+    = Id id
     ;

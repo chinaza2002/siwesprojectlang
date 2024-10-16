@@ -3,6 +3,7 @@ module CommonLex
 extend lang::std::Layout;
 
 lexical Id = ([a-z A-Z][a-z A-Z 0-9]* !>> [a-z A-Z 0-9]) \ Keywords;
+lexical ClassId  = ([A-Z][A-Za-z0-9]* !>> [a-z0-9]) \ Keywords;
 
 lexical Boolean = "true" | "false";
 
