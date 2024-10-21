@@ -2,6 +2,11 @@ test OK1 [[ var x = 1; ]]
 
 test OK2 [[ function day () { var ty = 1; } ]]
 
+test OK3 [[ class Car { var toyota = 6 + true;}]]
+expect {"`+` not defined for `Int` and `Bool`" }
+
+test OK4 [[ var cat = [6, 8, 5]; ]]
+
 test Undef1 [[ var x = y; ]] 
 expect { "Undefined variable `y`" }
 

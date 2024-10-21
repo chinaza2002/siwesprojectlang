@@ -9,12 +9,10 @@ data Declarations
     = vardec(VariableDeclaration variableDeclaration)
     | classdec(ClassDeclaration classDeclaration)
     | funcdec(FunctionDeclaration functionDeclaration)
-    | statdec(Statements statmentDeclaration)
     ;
 
 data VariableDeclaration
     = initialization(str name, Expr exp)
-    | noninitialization(str name)
     ;
 
 data FunctionDeclaration 
@@ -30,35 +28,14 @@ data ReturnStatement
     ;
 
 data ClassDeclaration
-    = classdefinition(str className, list[ExtendPart] optionalExtend, list[ConstructorDeclr] constructorDecl, Body body)
+    = classdefinition(str className,  list[ConstructorDeclr] constructorDecl, Body body)
     ;
 
-data ExtendPart 
-    = extenddefinition(str name)
-    ;
 
 data ConstructorDeclr 
     = constructordefinition(list[str] constructorParam, Body body)
     ;
 
-data Statements 
-    = forloop(VariableDeclaration variableDeclaration, Expr condition, Expr exp, Body body)
-    | forinloop(VariableDeclaration variableDeclaration, Expr exp, Body body)
-    | whileloop(Expr cond, Body body)
-    | dowhileloop(Body body, Expr cond)
-    | ifstatement(Expr cond, Body body)
-    | ifelsestatement(Expr cond, Body ifBody, Body elseBody)
-    | switchstatement(Expr cond, list[CasePart] casePart, Body defaultBody)
-    | trycatch(Body tryBody, str exception, Body catchBody)
-    | tryfinally(Body tryBody, Body finallyBody)
-    | trycatchfinally(Body tryBody, str exception, Body catchBody, Body finallyBody)
-    | breakstatement()
-    | continuestatement()
-    ;
-
-data CasePart 
-    = casestatement(Expr caseExp, Body caseBody)
-    ;
 
 data Expr
   = idExp(str name)

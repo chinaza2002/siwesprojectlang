@@ -11,7 +11,7 @@ data AType
     | boolType()
     | strType()
     | voidType()
-    // | listType()
+    | listType()
     ;
 
 data IdRole 
@@ -24,7 +24,7 @@ str prettyAType(boolType()) = "Bool";
 str prettyAType(intType()) = "Int";
 str prettyAType(strType()) = "Str";
 str prettyAType(classType()) = "Class";
-// str prettyAType(listType()) = "List";
+str prettyAType(listType()) = "List";
 
 
 
@@ -43,11 +43,9 @@ void collect(current: (ConstructorDeclr) `constructor ( <{Id ","}* constructorPa
     c.leaveScope(current);
 }
 
-void collect(current: (ClassDeclaration) `class <Id className> <ExtendPart? optionalExtend> { <ConstructorDeclr? constructorDecl> <Body body> }`, Collector c){
+
+void collect(current: (ClassDeclaration) `class <Id className> { <ConstructorDeclr? constructorDecl> <Body body> }`, Collector c){
     c.define("<className>",classId(),current,defType(classType()));
-    for (ext <- optionalExtend){
-        collect(ext, c);
-    }
     c.enterScope(current);{
         for (contrct <- constructorDecl){
             collect(contrct, c);
@@ -98,11 +96,12 @@ void collect(current: (Expr) `<String strVal>`, Collector c){
     c.fact(current, strType());
 }
 
-//idk how to do it for listexp
-
-// void collect(current: (Expr) `[<{Expr ","}*>]`, Collector c){
-
-// }
+void collect(current: (Expr) `[ <{Expr ","}* arrayExp>]`, Collector c){
+    c.fact(current, listType());
+    for (arrayitem <- arrayExp){
+        collect(arrayitem, c);
+    }
+}
 
 void collect(current: (Expr) `( <Expr bracketExpr> )`, Collector c){
     c.fact(current, bracketExpr);

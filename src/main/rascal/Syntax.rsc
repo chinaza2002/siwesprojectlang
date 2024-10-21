@@ -10,12 +10,10 @@ syntax Declarations
     = vardec : VariableDeclaration variableDeclaration
     | classdec : ClassDeclaration classDeclaration
     | funcdec : FunctionDeclaration functionDeclaration
-    | statdec : Statements statmentDeclaration
     ;
 
 syntax VariableDeclaration 
     = initialization : "var" Id name "=" Expr exp ";"
-    | noninitialization : "var" Id name ";"
     ;
 
 
@@ -32,34 +30,12 @@ syntax ReturnStatement
     ;
 
 syntax ClassDeclaration 
-    = classdefinition : "class" Id className ExtendPart? optionalExtend "{" ConstructorDeclr? constructorDecl Body body "}"
+    = classdefinition : "class" Id className "{" ConstructorDeclr? constructorDecl Body body "}"
     ;
 
-syntax ExtendPart 
-    = extenddefinition : "extends" Id name
-    ;
 
 syntax ConstructorDeclr 
     = constructordefinition : "constructor" "(" {Id ","}* constructorParam  ")" "{" Body body "}"
-    ;
-
-syntax Statements 
-    = forloop : "for" "(" VariableDeclaration variableDeclaration ";" Expr condition ";" Expr exp")" "{" Body body "}"
-    | forinloop :"for" "(" VariableDeclaration variableDeclaration "in" Expr exp ")" "{" Body body "}"
-    | whileloop : "while" "(" Expr cond ")" "{" Body body "}"
-    | dowhileloop : "do" "{" Body "}" "while" "(" Expr cond")"
-    | ifstatement : "if" "(" Expr cond ")" "{" Body body "}" 
-    | ifelsestatement : "if" "(" Expr cond ")" "{" Body ifBody "}" "else" "{" Body elseBody "}"
-    | switchstatement : "switch" "(" Expr cond ")" "{" CasePart* casePart "default" ":" Body defaultBody "}"
-    | trycatch : "try" "{" Body tryBody "}" "catch" "(" Id catchException ")" "{" Body catchBody"}"
-    | tryfinally : "try" "{" Body tryBody "}" "finally" "{" Body finallyBody "}"
-    | trycatchfinally : "try" "{" Body tryBody "}" "catch" "(" Id  catchException ")" "{" Body catchBody "}" "finally" "{" Body finallyBody"}"
-    | breakstatement : "break" ";"
-    | continuestatement : "continue" ";"
-    ;
-
-syntax CasePart 
-    = casestatement : "case" Expr caseExp ":" Body caseBody
     ;
 
 
@@ -68,7 +44,7 @@ syntax Expr
     | intexp : Integer intVal
     | boolexp : Boolean boolVal
     | strexp : String strVal
-    // | listexp : "[" {Expr ","}* arrayExp "]"
+    | listexp : "[" {Expr ","}* arrayExp "]"
     | bracket bracketexp : "(" Expr bracketExpr")"
     > postincrement : Expr postIncrExp "++"
     | postdecrement : Expr postDecrExp "--"
