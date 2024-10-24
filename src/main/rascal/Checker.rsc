@@ -83,15 +83,18 @@ void collect(current: (Body) `<Declarations* decList> <ReturnStatement? returnSt
 void collect(current: (Statement) `if ( <Expr cond> ) then {<Body thenPart>} else {<Body elsePart>}`, Collector c){
      c.requireEqual(cond, boolType(), error(cond, "Condition should be `bool`, found %t", cond));
      c.enterScope(current); {
-        collect(cond, thenPart, elsePart, c);
+        collect(thenPart, c);
+        collect(cond, c);
      }
      c.leaveScope(current);
+     collect(elsePart, c);
 }
 
 void collect(current: (Statement) `while (<Expr cond>) do {<Body body>}`, Collector c){
      c.requireEqual(cond, boolType(), error(cond, "Condition should be `bool`, found %t", cond));
      c.enterScope(current);{
-         collect(cond, body, c);
+         collect(body, c);
+         collect(cond, c);
      }
      c.leaveScope(current);
 }

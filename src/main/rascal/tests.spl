@@ -10,6 +10,7 @@ var list1 = [];
 
 var run = true;
 var walk = 10;
+var age = "age";
 
 if ( run ) then {var y = 5; while (run) do { var xu = 8; } } else {var y = 10;}
 while (run) do { var xu = 8; }
