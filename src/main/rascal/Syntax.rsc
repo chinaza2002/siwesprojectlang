@@ -10,6 +10,7 @@ syntax Declarations
     = vardec : VariableDeclaration variableDeclaration
     | classdec : ClassDeclaration classDeclaration
     | funcdec : FunctionDeclaration functionDeclaration
+    | statdec : Statement statementDeclaration
     ;
 
 syntax VariableDeclaration 
@@ -37,10 +38,13 @@ syntax ClassDeclaration
 syntax ConstructorDeclr 
     = constructordefinition : "constructor" "(" {Id ","}* constructorParam  ")" "{" Body body "}"
     ;
-
+syntax Statement
+   = ifstatement : "if" "(" Expr cond ")" "then" "{" Body thenPart "}" "else" "{" Body elsePart "}"
+   | whilestatment : "while" "(" Expr cond ")" "do" "{" Body body "}"
+   ; 
 
 syntax Expr
-    = idExp : Id idName
+    = idexp : Id idName
     | intexp : Integer intVal
     | boolexp : Boolean boolVal
     | strexp : String strVal

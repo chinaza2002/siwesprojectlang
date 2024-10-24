@@ -14,5 +14,5 @@ test bool splTests() {
     return runTests([|project://siwesprojectlang/src/main/rascal/tests.ttl|],
                     #start[Begin],
                     syntaxModelForTree,
-                    runName = "Spl");
+                    runName = "spl");
 }

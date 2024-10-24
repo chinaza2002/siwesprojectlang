@@ -18,9 +18,9 @@ void setupIde() {
         language(
             pathConfig(srcs = [|std:///|, |project://siwesprojectlang/src/main/rascal|]),
             "SPL Grammar",
-            "ttl",
+            "spl",
             "LanguageServer",
-            "syntaxModelForTree"
+            "siwesProjectLangContribs"
         )
     );
 }

@@ -80,6 +80,22 @@ void collect(current: (Body) `<Declarations* decList> <ReturnStatement? returnSt
     }
 }
 
+void collect(current: (Statement) `if ( <Expr cond> ) then {<Body thenPart>} else {<Body elsePart>}`, Collector c){
+     c.requireEqual(cond, boolType(), error(cond, "Condition should be `bool`, found %t", cond));
+     c.enterScope(current); {
+        collect(cond, thenPart, elsePart, c);
+     }
+     c.leaveScope(current);
+}
+
+void collect(current: (Statement) `while (<Expr cond>) do {<Body body>}`, Collector c){
+     c.requireEqual(cond, boolType(), error(cond, "Condition should be `bool`, found %t", cond));
+     c.enterScope(current);{
+         collect(cond, body, c);
+     }
+     c.leaveScope(current);
+}
+
 void collect(current: (Expr) `<Id idName>`, Collector c){
     c.use(idName, {variableId()});
 }
@@ -108,37 +124,37 @@ void collect(current: (Expr) `( <Expr bracketExpr> )`, Collector c){
     collect(bracketExpr, c);
 }
 
-void collect(current: (Expr) `<Expr postIncrExp> ++`, Collector c){     //not sure this is correct
+void collect(current: (Expr) `<Expr postIncrExp> ++`, Collector c){    
     c.fact(current, defType(postIncrExp));
     collect(postIncrExp, c);
 }
 
-void collect(current: (Expr) `<Expr postDecrExp> --`, Collector c){     //this too
+void collect(current: (Expr) `<Expr postDecrExp> --`, Collector c){     
     c.fact(current, defType(postDecrExp));
     collect(postDecrExp, c);
 }
 
-void collect(current: (Expr) `++ <Expr preIncrExp>`, Collector c){     //this too
+void collect(current: (Expr) `++ <Expr preIncrExp>`, Collector c){    
     c.fact(current, defType(preIncrExp));
     collect(preIncrExp, c);
 }
 
-void collect(current: (Expr) `-- <Expr preDecrExp>`, Collector c){     //this too
-    c.fact(current, defType(preDecrExp));
+void collect(current: (Expr) `-- <Expr preDecrExp>`, Collector c){    
     collect(preDecrExp, c);
 }
 
 void collect(current: (Expr) `<Expr lhs> * <Expr rhs>`, Collector c){
     c.calculate("multipllication", current, [lhs, rhs], 
-    AType (Solver s){
-        switch(<s.getType(lhs), s.getType(rhs)>){
-            case <intType(), intType()>: return intType();
-            default: {
-                s.report(error(current, "`*` not defined for %t and %t", lhs, rhs));
-                return intType();
+        AType (Solver s){
+            switch(<s.getType(lhs), s.getType(rhs)>){
+                case <intType(), intType()>: return intType();
+                default: {
+                    s.report(error(current, "`*` not defined for %t and %t", lhs, rhs));
+                    return intType();
+                }
             }
-        }
-    });
+        });
+    collect(lhs,rhs, c);
 }
 
 void collect(current: (Expr) `<Expr lhs> / <Expr rhs>`, Collector c){

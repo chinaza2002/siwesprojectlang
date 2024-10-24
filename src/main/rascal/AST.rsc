@@ -1,6 +1,5 @@
 module AST
 
-// extend CommonLex;
 data Begin 
     = declarations(list[Declarations] declList)
     ;
@@ -9,6 +8,7 @@ data Declarations
     = vardec(VariableDeclaration variableDeclaration)
     | classdec(ClassDeclaration classDeclaration)
     | funcdec(FunctionDeclaration functionDeclaration)
+    | statdec(Statement statementDeclaration)
     ;
 
 data VariableDeclaration
@@ -36,9 +36,14 @@ data ConstructorDeclr
     = constructordefinition(list[str] constructorParam, Body body)
     ;
 
+data Statement 
+    = ifstatement(Expr cond, Body thenPart, Body elsePart)
+    | whilestatment(Expr cond, Body body)
+    ;
+
 
 data Expr
-  = idExp(str name)
+  = idexp(str name)
   | intexp(int intVal)
   | boolexp(bool boolVal)
   | strexp(str strVal)

@@ -10,7 +10,7 @@ lexical Integer = [0-9]+ !>> [0-9];
 
 lexical String = [\"] ![\"]* [\"];
 
-keyword Keywords = "true" | "false" | "if" | "else" |
+keyword Keywords = "true" | "false" | "if" | "else" | "then" | 
                  "function" | "int" | "bool" |"str" | "while"
                  | "return"| "class" | "extends" | "for" | "in" | "do"
                  | "var" | "try" | "catch" | "finally"| "break" | "continue" 

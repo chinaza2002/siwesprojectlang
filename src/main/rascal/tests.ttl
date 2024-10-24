@@ -1,11 +1,21 @@
 test OK1 [[ var x = 1; ]]
 
-test OK2 [[ function day () { var ty = 1; } ]]
+test OK2 [[ function day () { var ty = 1; var col = (7 == 7); var emptylist = []; return col; } ]]
 
 test OK3 [[ class Car { var toyota = 6 + true;}]]
 expect {"`+` not defined for `Int` and `Bool`" }
 
 test OK4 [[ var cat = [6, 8, 5]; ]]
+
+test OK5 [[ var name = "chinaza"; ]]
+
+test OK6 [[ var run = true; 
+    if ( true ) 
+        then { var y = 5; 
+            while (run) 
+                do { var xu = 8; }
+                } 
+    else {var rt = 10;} ]]
 
 test Undef1 [[ var x = y; ]] 
 expect { "Undefined variable `y`" }
