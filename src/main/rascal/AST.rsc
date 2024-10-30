@@ -9,6 +9,7 @@ data Declarations
     | classdec(ClassDeclaration classDeclaration)
     | funcdec(FunctionDeclaration functionDeclaration)
     | statdec(Statement statementDeclaration)
+    | exprdec(Expr exprDeclaration)
     ;
 
 data VariableDeclaration
@@ -31,7 +32,6 @@ data ClassDeclaration
     = classdefinition(str className,  list[ConstructorDeclr] constructorDecl, Body body)
     ;
 
-
 data ConstructorDeclr 
     = constructordefinition(list[str] constructorParam, Body body)
     ;
@@ -41,7 +41,6 @@ data Statement
     | whilestatment(Expr cond, Body body)
     ;
 
-
 data Expr
   = idexp(str name)
   | intexp(int intVal)
@@ -49,10 +48,6 @@ data Expr
   | strexp(str strVal)
   | listexp(list[Expr] arrayExp)
   | bracketexp(Expr bracketExpr)
-  | postincrement(Expr postIncrExp)
-  | postdecrement(Expr postDecrExp)
-  | preincrement(Expr preIncrExp)
-  | predecrement(Expr preDecrExp)
   | mul(Expr lhs, Expr rhs)
   | div(Expr lhs, Expr rhs)
   | modulo(Expr lhs, Expr rhs)

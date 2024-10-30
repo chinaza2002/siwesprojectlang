@@ -11,6 +11,7 @@ syntax Declarations
     | classdec : ClassDeclaration classDeclaration
     | funcdec : FunctionDeclaration functionDeclaration
     | statdec : Statement statementDeclaration
+    | exprdec : Expr exprDeclaration
     ;
 
 syntax VariableDeclaration 
@@ -50,10 +51,6 @@ syntax Expr
     | strexp : String strVal
     | listexp : "[" {Expr ","}* arrayExp "]"
     | bracket bracketexp : "(" Expr bracketExpr")"
-    > postincrement : Expr postIncrExp "++"
-    | postdecrement : Expr postDecrExp "--"
-    > preincrement : "++" Expr preIncrExp
-    | predecrement : "--" Expr preDecrExp
     > left mul : Expr lhs "*" Expr rhs
     > left div : Expr lhs "/" Expr rhs
     > left modulo : Expr lhs "%" Expr rhs

@@ -127,24 +127,6 @@ void collect(current: (Expr) `( <Expr bracketExpr> )`, Collector c){
     collect(bracketExpr, c);
 }
 
-void collect(current: (Expr) `<Expr postIncrExp> ++`, Collector c){    
-    c.fact(current, defType(postIncrExp));
-    collect(postIncrExp, c);
-}
-
-void collect(current: (Expr) `<Expr postDecrExp> --`, Collector c){     
-    c.fact(current, defType(postDecrExp));
-    collect(postDecrExp, c);
-}
-
-void collect(current: (Expr) `++ <Expr preIncrExp>`, Collector c){    
-    c.fact(current, defType(preIncrExp));
-    collect(preIncrExp, c);
-}
-
-void collect(current: (Expr) `-- <Expr preDecrExp>`, Collector c){    
-    collect(preDecrExp, c);
-}
 
 void collect(current: (Expr) `<Expr lhs> * <Expr rhs>`, Collector c){
     c.calculate("multipllication", current, [lhs, rhs], 
@@ -295,9 +277,9 @@ void collect(current: (Expr) `<Expr lhs> = <Expr rhs>`, Collector c){
     c.calculate("assign", current, [lhs, rhs], 
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
-                case [strType(), intType()] : return intType();
+                case [intType(), intType()] : return intType();
                 case [strType(), strType()] : return strType();
-                case [strType(), boolType()] : return boolType();
+                case [boolType(), boolType()] : return boolType();
                 default : s.report(error(current, "%q requires two comparable types but found %t and %t", "=", lhs, rhs));
             }
             return strType();
@@ -309,7 +291,7 @@ void collect(current: (Expr) `<Expr lhs> *= <Expr rhs>`, Collector c){
     c.calculate("assignmul", current, [lhs, rhs], 
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
-                case [strType(), intType()] : return intType();
+                case [intType(), intType()] : return intType();
                 default : s.report(error(current, "%q requires two equal types but found %t and %t", "*=", lhs, rhs));
             }
             return intType();
@@ -321,7 +303,7 @@ void collect(current: (Expr) `<Expr lhs> /= <Expr rhs>`, Collector c){
     c.calculate("assigndiv", current, [lhs, rhs], 
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
-                case [strType(), intType()] : return intType();
+                case [intType(), intType()] : return intType();
                 default : s.report(error(current, "%q requires two equal types but found %t and %t", "/=", lhs, rhs));
             }
             return intType();
@@ -333,7 +315,7 @@ void collect(current: (Expr) `<Expr lhs> %= <Expr rhs>`, Collector c){
     c.calculate("assignmodulo", current, [lhs, rhs], 
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
-                case [strType(), intType()] : return intType();
+                case [intType(), intType()] : return intType();
                 default : s.report(error(current, "%q requires two equal types but found %t and %t", "%=", lhs, rhs));
             }
             return intType();
@@ -345,7 +327,7 @@ void collect(current: (Expr) `<Expr lhs> += <Expr rhs>`, Collector c){
     c.calculate("assignadd", current, [lhs, rhs], 
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
-                case [strType(), intType()] : return intType();
+                case [intType(), intType()] : return intType();
                 default : s.report(error(current, "%q requires two equal types but found %t and %t", "+=", lhs, rhs));
             }
             return intType();
@@ -357,7 +339,7 @@ void collect(current: (Expr) `<Expr lhs> -= <Expr rhs>`, Collector c){
     c.calculate("assignsub", current, [lhs, rhs], 
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
-                case [strType(), intType()] : return intType();
+                case [intType(), intType()] : return intType();
                 default : s.report(error(current, "%q requires two equal types but found %t and %t", "-=", lhs, rhs));
             }
             return intType();

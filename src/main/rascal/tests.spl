@@ -2,7 +2,7 @@ class Car {
     constructor(weight, height) {
         var day = night;
     }
-    function getvalue (){
+    function getvalue (walk){
     return x;
     }
 }

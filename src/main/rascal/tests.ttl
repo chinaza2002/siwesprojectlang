@@ -17,6 +17,10 @@ test OK6 [[ var run = true;
                 } 
     else {var y = 10;} ]]
 
+test OK7 [[ var age = 10; age += 1  ]]
+
+test OK8 [[ while (true) do { var xu = 8; } ]]
+
 test Undef1 [[ var x = y; ]] 
 expect { "Undefined variable `y`" }
 
