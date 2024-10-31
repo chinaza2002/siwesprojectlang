@@ -5,7 +5,7 @@ test OK2 [[ function day () { var ty = 1; var col = (7 == 7); var emptylist = []
 test OK3 [[ class Car { var toyota = 6 + true;}]]
 expect {"`+` not defined for `Int` and `Bool`" }
 
-test OK4 [[ var cat = [6, 8, 5]; ]]
+test OK4 [[ var List = [6, 8, 5]; ]]
 
 test OK5 [[ var name = "chinaza"; ]]
 
@@ -17,7 +17,8 @@ test OK6 [[ var run = true;
                 } 
     else {var y = 10;} ]]
 
-test OK7 [[ var age = 10; age += 1  ]]
+test OK7 [[ var age = 10; var boolVal = true; boolVal = hj  ]]
+expect { "Undefined variable `hj`" }
 
 test OK8 [[ while (true) do { var xu = 8; } ]]
 

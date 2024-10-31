@@ -278,9 +278,15 @@ void collect(current: (Expr) `<Expr lhs> = <Expr rhs>`, Collector c){
         AType (Solver s) {
             switch([s.getType(lhs), s.getType(rhs)]){
                 case [intType(), intType()] : return intType();
+                case [intType(), strType()] : return strType();
+                case [intType(), boolType()] : return boolType();
                 case [strType(), strType()] : return strType();
+                case [strType(), intType()] : return intType();
+                case [strType(), boolType()] : return boolType();
                 case [boolType(), boolType()] : return boolType();
-                default : s.report(error(current, "%q requires two comparable types but found %t and %t", "=", lhs, rhs));
+                case [boolType(), intType()] : return intType();
+                case [boolType(), strType()] : return strType();
+                default : s.report(error(current, "Illegal assignment", "=", lhs, rhs));
             }
             return strType();
         });
